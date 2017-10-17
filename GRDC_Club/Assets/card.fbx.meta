@@ -1,9 +1,17 @@
 fileFormatVersion: 2
+<<<<<<< HEAD
 guid: d4b2659ced950db499fed178886cf4d6
 timeCreated: 1506985252
 licenseType: Free
 ModelImporter:
   serializedVersion: 19
+=======
+guid: bb3ee7ccfcce28548bd6feb1152debc8
+timeCreated: 1507031069
+licenseType: Free
+ModelImporter:
+  serializedVersion: 21
+>>>>>>> UI Changes
   fileIDToRecycleName:
     100000: ' 1'
     100002: Camera0
@@ -15,8 +23,16 @@ ModelImporter:
     400004: //RootNode
     400006: Undefined
     400008: Undefined 1
+<<<<<<< HEAD
     2300000: ' 1'
     3300000: ' 1'
+=======
+    2000000: Camera0
+    2300000: ' 1'
+    3300000: ' 1'
+    10800000: Undefined
+    10800002: Undefined 1
+>>>>>>> UI Changes
   materials:
     importMaterials: 1
     materialName: 0
@@ -39,6 +55,10 @@ ModelImporter:
     animationScaleError: 0.5
     animationWrapMode: 0
     extraExposedTransformPaths: []
+<<<<<<< HEAD
+=======
+    extraUserProperties: []
+>>>>>>> UI Changes
     clipAnimations: []
     isReadable: 1
   meshes:
@@ -46,7 +66,14 @@ ModelImporter:
     globalScale: 1
     meshCompression: 0
     addColliders: 0
+<<<<<<< HEAD
     importBlendShapes: 1
+=======
+    importVisibility: 1
+    importBlendShapes: 1
+    importCameras: 1
+    importLights: 1
+>>>>>>> UI Changes
     swapUVChannels: 0
     generateSecondaryUV: 0
     useFileUnits: 1
@@ -62,6 +89,10 @@ ModelImporter:
     normalSmoothAngle: 60
     normalImportMode: 0
     tangentImportMode: 3
+<<<<<<< HEAD
+=======
+    normalCalculationMode: 4
+>>>>>>> UI Changes
   importAnimation: 1
   copyAvatar: 0
   humanDescription:
