@@ -34,6 +34,7 @@ public class CardHolderLogic : MonoBehaviour
 
             if (hit.collider != null)
             {
+                //TODO Tell card it was clicked
                 Debug.Log("Target Position: " + hit.collider.gameObject.transform.position);
             }
         }
@@ -75,6 +76,7 @@ public class CardHolderLogic : MonoBehaviour
             if (cardRenderer != null)
             {
                 cardRenderer.material = CardMaterials[CardResults[i]];
+                //TODO Tell card what kind it is
             }
             Cards[i].SetActive(true);
         }
