@@ -9,21 +9,26 @@ public class Player : MonoBehaviour
 
     public Vector2 DeltaMove;
 
-    public GameObject PlayerObject;
+    public CardHolderLogic Cards;
 
     private float x;
     private float y;
 
-	public float speed = 1.5F;
- 	public float spacing = 1.0F;
-	private Vector3 pos;
-	
+    public float speed = 1.5F;
+    public float spacing = 1.0F;
+    private Vector3 pos;
+
+    private bool lastE, lastR;
+
     void Start()
     {
-		pos = PlayerObject.transform.position;
+        pos = this.transform.position;
 
-        x = PlayerObject.transform.position.x;
-        y = PlayerObject.transform.position.y;
+        x = this.transform.position.x;
+        y = this.transform.position.y;
+
+        lastE = false;
+        lastR = false;
     }
 
     // Update is called once per frame
@@ -39,15 +44,28 @@ public class Player : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.D))
             pos.x += spacing;
 
-        PlayerObject.transform.position = Vector3.MoveTowards(transform.position, pos, speed * Time.deltaTime);
+        this.transform.position = Vector3.MoveTowards(transform.position, pos, speed * Time.deltaTime);
 
-        if (PlayerObject.transform.position.x != x)
+        if (this.transform.position.x != x)
         {
-            DeltaMove.x = PlayerObject.transform.position.x - x;
+            DeltaMove.x = this.transform.position.x - x;
         }
-        if (PlayerObject.transform.position.y != y)
+        if (this.transform.position.y != y)
         {
-            DeltaMove.y = PlayerObject.transform.position.y - y;
+            DeltaMove.y = this.transform.position.y - y;
+        }
+
+        if (Input.GetKeyDown(KeyCode.R) && !lastR)
+        {
+            lastR = true;
+            lastE = false;
+            Cards.DrawCards();
+        }
+        if (Input.GetKeyDown(KeyCode.E) && !lastE)
+        {
+            lastE = true;
+            lastR = false;
+            Cards.EraseCards();
         }
     }
 }
