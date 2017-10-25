@@ -14,18 +14,30 @@ public class CardHolderLogic : MonoBehaviour
 
     public float MoveOdd, WeakMoveOdd, StrongMoveOdd, AttackOdd, ShieldOdd;
 
-    public double result;
+    private double result;
     public List<int> CardResults;
 
+    private bool CardsIsVisible;
     // Use this for initialization
     void Start()
     {
         CardResults = new List<int> { 0, 0, 0, 0, 0, 0, 0 };
+        EraseCards();
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (CardsIsVisible && Input.GetMouseButtonDown(0))
+        {
+            RaycastHit2D hit = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(Input.mousePosition), Vector2.zero);
+
+            if (hit.collider != null)
+            {
+                Debug.Log("Target Position: " + hit.collider.gameObject.transform.position);
+            }
+        }
+
     }
 
     public void DrawCards()
@@ -66,6 +78,7 @@ public class CardHolderLogic : MonoBehaviour
             }
             Cards[i].SetActive(true);
         }
+        CardsIsVisible = true;
     }
     public void EraseCards()
     {
@@ -74,5 +87,6 @@ public class CardHolderLogic : MonoBehaviour
             card.SetActive(false);
             CardResults = new List<int> { 0, 0, 0, 0, 0, 0, 0 };
         }
+        CardsIsVisible = false;
     }
 }
