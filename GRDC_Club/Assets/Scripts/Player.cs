@@ -74,5 +74,9 @@ public class Player : MonoBehaviour
             lastR = false;
             Cards.EraseCards();
         }
+        if (Input.GetKeyDown(KeyCode.Q))
+        {
+            Cards.DealCards();       
+        }
     }
 }
