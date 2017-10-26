@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class CardHolderLogic : MonoBehaviour
 {
+    public Player player;
+    public MoveSelect moveSelect;
     public List<GameObject> Cards; //List of visible cards
     public List<Material> CardMaterials; //Materials to be used on the cards
     public float MoveOdd, WeakMoveOdd, StrongMoveOdd, AttackOdd, ShieldOdd; //Odds of a card being drawn
@@ -12,9 +14,9 @@ public class CardHolderLogic : MonoBehaviour
     private bool CardsIsVisible; //Whether or not the cards are currenly visible
     private int SelectedCards, CardsLeft;
 
-    public int WaitForMove;
+    public bool WaitForMove;
 
-    private List<Action> TurnSelection;
+    public List<Action> TurnSelection;
 
     // Use this for initialization
     void Start()
@@ -24,7 +26,7 @@ public class CardHolderLogic : MonoBehaviour
         SelectedCards = 0;
         CardsLeft = 7;
         TurnSelection = new List<Action>();
-        WaitForMove = 0;
+        WaitForMove = false;
     }
 
     /// <summary>
@@ -32,7 +34,7 @@ public class CardHolderLogic : MonoBehaviour
     /// </summary>
     void Update()
     {
-        if (CardsIsVisible && Input.GetMouseButtonDown(0) && SelectedCards < 3)
+        if (CardsIsVisible && Input.GetMouseButtonDown(0) && SelectedCards < 3 && WaitForMove == false)
         {
             RaycastHit2D hit = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(Input.mousePosition), Vector2.zero);
             if (hit.collider != null)
@@ -40,7 +42,7 @@ public class CardHolderLogic : MonoBehaviour
                 //TODO Tell card it was clicked
                 for (int i = 0; i < Cards.Count; i++)
                 {
-                    if (Cards[i].Equals(hit.collider.gameObject))
+                    if (Cards[i].Equals(hit.collider.gameObject) && CardResults[i] != TurnType.None)
                     {
                         TurnSelection.Add(new Action(CardResults[i]));
 
@@ -48,20 +50,24 @@ public class CardHolderLogic : MonoBehaviour
                         {
                             //StartCoroutine(SelectMovementType(this, SelectedCards)); <-- gets intended movement then reports back (gives gameobject and the index of turns)
                             //WaitForMove is the number of moves it is waiting for, incase order gets weird
-                            WaitForMove += 1;
+                            moveSelect.GetMove(TurnSelection.Count-1, 3, Cards[i].transform.position.x, Cards[i].transform.position.y);
+                            WaitForMove = true;
                         }
                         //Set it so it wont draw next turn
                         CardResults[i] = TurnType.None;
                         SelectedCards++;
                         CardsLeft -= 1;
-
-                        //TODO Get player intentions for movement
                     }
                 }
             }
         }
-        if ((SelectedCards == 3 || CardsLeft == 0) && WaitForMove == 0)
-            ;//TODO set player to ready
+        if ((SelectedCards == 3 || CardsLeft == 0) && WaitForMove == false)
+        {
+            SelectedCards = 0;
+            player.Ready = true;
+            EraseCards();
+        }
+
     }
 
     /// <summary>

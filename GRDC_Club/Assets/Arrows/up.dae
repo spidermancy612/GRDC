@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<COLLADA xmlns="http://www.collada.org/2005/11/COLLADASchema" version="1.4.1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <asset>
+    <contributor>
+      <author>Blender User</author>
+      <authoring_tool>Blender 2.79.0 commit date:2017-09-11, commit time:10:43, hash:5bd8ac9</authoring_tool>
+    </contributor>
+    <created>2017-10-26T15:54:55</created>
+    <modified>2017-10-26T15:54:55</modified>
+    <unit name="meter" meter="1"/>
+    <up_axis>Z_UP</up_axis>
+  </asset>
+  <library_images/>
+  <library_effects/>
+  <library_geometries>
+    <geometry id="CUCurve_055-mesh" name="CUCurve.055">
+      <mesh>
+        <source id="CUCurve_055-mesh-positions">
+          <float_array id="CUCurve_055-mesh-positions-array" count="24">0.02696812 0.15868 0 0.06930232 0.15868 0 -0.02496182 0.07402956 0 0.02696812 0.07402956 0 -0.02496182 0.15868 0 0.00114423 0.2732403 0 -0.06842494 0.15868 0 -0.02496182 0.15868 0</float_array>
+          <technique_common>
+            <accessor source="#CUCurve_055-mesh-positions-array" count="8" stride="3">
+              <param name="X" type="float"/>
+              <param name="Y" type="float"/>
+              <param name="Z" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <source id="CUCurve_055-mesh-normals">
+          <float_array id="CUCurve_055-mesh-normals-array" count="3">0 0 1</float_array>
+          <technique_common>
+            <accessor source="#CUCurve_055-mesh-normals-array" count="1" stride="3">
+              <param name="X" type="float"/>
+              <param name="Y" type="float"/>
+              <param name="Z" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <vertices id="CUCurve_055-mesh-vertices">
+          <input semantic="POSITION" source="#CUCurve_055-mesh-positions"/>
+        </vertices>
+        <polylist count="1">
+          <input semantic="VERTEX" source="#CUCurve_055-mesh-vertices" offset="0"/>
+          <input semantic="NORMAL" source="#CUCurve_055-mesh-normals" offset="1"/>
+          <vcount>8 </vcount>
+          <p>1 0 5 0 6 0 7 0 4 0 2 0 3 0 0 0</p>
+        </polylist>
+      </mesh>
+    </geometry>
+  </library_geometries>
+  <library_controllers/>
+  <library_visual_scenes>
+    <visual_scene id="Scene" name="Scene">
+      <node id="Curve_002" name="Curve_002" type="NODE">
+        <matrix sid="transform">1 0 0 0.2397935 0 1 0 -0.2177595 0 0 1 0 0 0 0 1</matrix>
+        <instance_geometry url="#CUCurve_055-mesh" name="Curve_002"/>
+      </node>
+    </visual_scene>
+  </library_visual_scenes>
+  <scene>
+    <instance_visual_scene url="#Scene"/>
+  </scene>
+</COLLADA>
