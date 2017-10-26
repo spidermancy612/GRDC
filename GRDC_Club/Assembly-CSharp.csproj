@@ -51,6 +51,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+     <Compile Include="Assets\agusia\movementScript.cs" />
      <Compile Include="Assets\agusia\movePressButton.cs" />
  <Reference Include="UnityEngine.UI">
  <HintPath>/home/agusia/Unity/unity-editor-2017.1.2f1/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
