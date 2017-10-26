@@ -6,27 +6,21 @@ public class Player : MonoBehaviour
 {
 
     // Use this for initialization
-
-    public Vector2 MoveForces;
-
     public Vector2 DeltaMove;
-
     public CardHolderLogic Cards;
-
     public bool Ready;
     public bool TurnPlaying;
-
     public GameObject Shield;
-
-    private float x;
-    private float y;
-
+    private float x, y;
     public float speed = 1.5F;
     public float spacing = 1.0F;
     private Vector3 pos;
 
     private bool lastE, lastR;
 
+    /// <summary>
+    /// Initialize variables
+    /// </summary>
     void Start()
     {
         pos = this.transform.position;
@@ -40,7 +34,9 @@ public class Player : MonoBehaviour
         TurnPlaying = false;
     }
 
-    // Update is called once per frame
+    /// <summary>
+    /// Get player input and play out turn
+    /// </summary>
     void Update()
     {
         if (TurnPlaying == true)
@@ -77,25 +73,6 @@ public class Player : MonoBehaviour
             lastE = true;
             lastR = false;
             Cards.EraseCards();
-        }
-    }
-
-    public void Play(int card)
-    {
-        switch (Cards.GetCardResult(card))
-        {
-            case 0:
-            //Move
-            case 1:
-            //WeakMove
-            case 2:
-            //StrongMove
-            case 3:
-            //Attack
-            case 4:
-            //Shield
-            default:
-                break;
         }
     }
 }

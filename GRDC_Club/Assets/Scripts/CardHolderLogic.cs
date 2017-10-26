@@ -5,16 +5,13 @@ using UnityEngine;
 public class CardHolderLogic : MonoBehaviour
 {
     public List<GameObject> Cards; //List of visible cards
-
-
     public List<Material> CardMaterials; //Materials to be used on the cards
-
     public float MoveOdd, WeakMoveOdd, StrongMoveOdd, AttackOdd, ShieldOdd; //Odds of a card being drawn
     public List<int> CardResults; //List of Card results with range 0-4
-
     private bool CardsIsVisible; //Whether or not the cards are currenly visible
-
     private int SelectedCards;
+
+    private List<int> TurnSelection;
 
     // Use this for initialization
     void Start()
@@ -22,15 +19,17 @@ public class CardHolderLogic : MonoBehaviour
         CardResults = new List<int> { 0, 0, 0, 0, 0, 0, 0 };
         EraseCards();
         SelectedCards = 0;
+        TurnSelection = new List<int>();
     }
 
-    // Update is called once per frame
+    /// <summary>
+    /// Update is called once per frame
+    /// </summary>
     void Update()
     {
         if (CardsIsVisible && Input.GetMouseButtonDown(0) && SelectedCards < 3)
         {
             RaycastHit2D hit = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(Input.mousePosition), Vector2.zero);
-
             if (hit.collider != null)
             {
                 //TODO Tell card it was clicked
@@ -38,20 +37,20 @@ public class CardHolderLogic : MonoBehaviour
                 {
                     if (Cards[i].Equals(hit.collider.gameObject))
                     {
-                        //Set it so it wont draw nerst turn
+                        TurnSelection.Add(CardResults[i]);
+                        //Set it so it wont draw next turn
                         CardResults[i] = -1;
                         SelectedCards++;
                     }
                 }
             }
-        }
-
+        }       
     }
 
-    /*
-     * Draw Cards
-     * Using Card draw odds, draws the cards from the deck and displays them on screen
-     */
+    /// <summary>
+    /// Deal Cards
+    /// Determines what cards are drawn and stores in CardResults
+    /// </summary>
     public void DealCards()
     {
         for (int i = 0; i < CardResults.Count; i++)
@@ -87,32 +86,35 @@ public class CardHolderLogic : MonoBehaviour
         SelectedCards = 0;
     }
 
+    /// <summary>
+    /// Draw Cards
+    /// Draws cards to screen using CardResults to determine what type it is
+    /// If CardResults for the card is -1 it is not drawn to screen
+    /// </summary>
     public void DrawCards()
     {
         for (int i = 0; i < CardResults.Count; i++)
         {
             if (CardResults[i] != -1)
             {
-                //Tell the cards which material to use so they look like cards
                 MeshRenderer cardRenderer = Cards[i].GetComponent<MeshRenderer>();
                 if (cardRenderer != null)
                 {
                     cardRenderer.material = CardMaterials[CardResults[i]];
                     //TODO Tell card what kind it is
                 }
-
-                //Tell the cards to come in all pretty like (animate)
                 CardController cardController = Cards[i].GetComponent<CardController>();
                 cardController.DrawCard();
                 Cards[i].SetActive(true);
             }
         }
-        //Set so we know the cards are on screen
         CardsIsVisible = true;
     }
-    /*
-    * Make the cards disapear
-     */
+
+    /// <summary>
+    /// Erase Cards
+    /// Remove Cards from screen
+    /// </summary>
     public void EraseCards()
     {
         foreach (var card in Cards)
@@ -126,12 +128,14 @@ public class CardHolderLogic : MonoBehaviour
         CardsIsVisible = false;
     }
 
-    /*
-    *   Get Card Results
-    *   Returns the card result for the specified index so i can be acted out
-    */
-    public int GetCardResult(int card)
+    /// <summary>
+    /// Returne the turns card selection
+    /// </summary>
+    /// <returns>List of the Turn Selection</returns>
+    public List<int> GetCardResult()
     {
-        return CardResults[card];
+        List<int> temp = TurnSelection;
+        TurnSelection = new List<int>();
+        return temp;
     }
 }

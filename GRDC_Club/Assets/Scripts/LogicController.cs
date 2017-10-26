@@ -15,7 +15,10 @@ public class LogicController : MonoBehaviour {
 		playTurn = false;
 	}
 	
-	// Update is called once per frame
+	/// <summary>
+    /// Chhecks of all players are ready
+    /// if so it plays out the turn
+    /// </summary>
 	void Update () {
 		playTurn = true;
 		foreach (var player in Players)
@@ -28,12 +31,13 @@ public class LogicController : MonoBehaviour {
 
 		if(playTurn)
 		{
-			for (int i = 0; i < 7; i ++)
+			for (int i = 0; i < 3; i ++)
 			{
 				foreach(var player in Players)
 				{
-					player.Play(i);
+                    //tell player to act out turn
 				}
+                //delay 5 secs
 			}
 		}
 	}
