@@ -12,6 +12,8 @@ public class CardHolderLogic : MonoBehaviour
 
     public List<Material> CardMaterials;
 
+    public List<CardController> CardScript;
+
     public float MoveOdd, WeakMoveOdd, StrongMoveOdd, AttackOdd, ShieldOdd;
 
     private double result;
@@ -78,6 +80,8 @@ public class CardHolderLogic : MonoBehaviour
                 cardRenderer.material = CardMaterials[CardResults[i]];
                 //TODO Tell card what kind it is
             }
+            CardController cardController = Cards[i].GetComponent<CardController>();
+            cardController.DrawCard();
             Cards[i].SetActive(true);
         }
         CardsIsVisible = true;
@@ -88,6 +92,9 @@ public class CardHolderLogic : MonoBehaviour
         {
             card.SetActive(false);
             CardResults = new List<int> { 0, 0, 0, 0, 0, 0, 0 };
+
+            CardController cardController = card.GetComponent<CardController>();
+            cardController.Reset();
         }
         CardsIsVisible = false;
     }
