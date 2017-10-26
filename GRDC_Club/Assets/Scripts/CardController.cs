@@ -19,6 +19,9 @@ public class CardController : MonoBehaviour {
 		
 	}
 
+	/*
+	* Make the card dance
+	 */
 	public void DrawCard(){
 		Animator card = GetComponent<Animator>();
 		card.Play("Take001", 0);

@@ -55,6 +55,7 @@
      <Compile Include="Assets\Scripts\CardController.cs" />
      <Compile Include="Assets\Scripts\CardHolderLogic.cs" />
      <Compile Include="Assets\Scripts\GameController.cs" />
+     <Compile Include="Assets\Scripts\LogicController.cs" />
      <Compile Include="Assets\Scripts\Player.cs" />
      <Compile Include="Assets\Scripts\StarsParralaxMovement.cs" />
  <Reference Include="UnityEngine.UI">
