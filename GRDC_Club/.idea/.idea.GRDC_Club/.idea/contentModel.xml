@@ -14,16 +14,25 @@
           </e>
         </e>
         <e p="Scripts" t="Include">
-          <e p="Action.cs" t="Include" />
           <e p="Button_Script.cs" t="Include" />
-          <e p="CardController.cs" t="Include" />
-          <e p="CardHolderLogic.cs" t="Include" />
+          <e p="CardLogic" t="Include">
+            <e p="CardController.cs" t="Include" />
+            <e p="CardHolderLogic.cs" t="Include" />
+            <e p="MoveSelect.cs" t="Include" />
+          </e>
+          <e p="Classes" t="Include">
+            <e p="Action.cs" t="Include" />
+          </e>
           <e p="Constant.cs" t="Include" />
-          <e p="GameController.cs" t="Include" />
-          <e p="LogicController.cs" t="Include" />
-          <e p="MoveSelect.cs" t="Include" />
-          <e p="Player.cs" t="Include" />
-          <e p="StarsParralaxMovement.cs" t="Include" />
+          <e p="Environment" t="Include">
+            <e p="StarsParralaxMovement.cs" t="Include" />
+          </e>
+          <e p="Gameplay" t="Include">
+            <e p="LogicController.cs" t="Include" />
+          </e>
+          <e p="Player" t="Include">
+            <e p="Player.cs" t="Include" />
+          </e>
         </e>
       </e>
       <e p="GRDC_Club.sln" t="IncludeFlat" />

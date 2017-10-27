@@ -52,16 +52,15 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Scripts\Action.cs" />
     <Compile Include="Assets\Scripts\Button_Script.cs" />
-    <Compile Include="Assets\Scripts\CardController.cs" />
-    <Compile Include="Assets\Scripts\CardHolderLogic.cs" />
+    <Compile Include="Assets\Scripts\CardLogic\CardController.cs" />
+    <Compile Include="Assets\Scripts\CardLogic\CardHolderLogic.cs" />
+    <Compile Include="Assets\Scripts\CardLogic\MoveSelect.cs" />
+    <Compile Include="Assets\Scripts\Classes\Action.cs" />
     <Compile Include="Assets\Scripts\Constant.cs" />
-    <Compile Include="Assets\Scripts\GameController.cs" />
-    <Compile Include="Assets\Scripts\LogicController.cs" />
-    <Compile Include="Assets\Scripts\MoveSelect.cs" />
-    <Compile Include="Assets\Scripts\Player.cs" />
-    <Compile Include="Assets\Scripts\StarsParralaxMovement.cs" />
+    <Compile Include="Assets\Scripts\Environment\StarsParralaxMovement.cs" />
+    <Compile Include="Assets\Scripts\Gameplay\LogicController.cs" />
+    <Compile Include="Assets\Scripts\Player\Player.cs" />
     <Reference Include="UnityEngine.UI">
       <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
     </Reference>

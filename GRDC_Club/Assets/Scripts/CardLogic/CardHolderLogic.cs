@@ -6,13 +6,13 @@ using Constants;
 
 public class CardHolderLogic : MonoBehaviour
 {
-    public Player player;
-    public MoveSelect moveSelect;
+    public Player Player;
+    public MoveSelect MoveSelect;
     public List<GameObject> Cards; //List of visible cards
     public List<Material> CardMaterials; //Materials to be used on the cards
     public List<TurnType> CardResults; //List of Card results with range 0-4
-    private bool CardsIsVisible; //Whether or not the cards are currenly visible
-    private int SelectedCards, CardsLeft;
+    private bool _cardsIsVisible; //Whether or not the cards are currenly visible
+    private int _selectedCards, _cardsLeft;
 
     public bool WaitForMove;
 
@@ -23,8 +23,8 @@ public class CardHolderLogic : MonoBehaviour
     {
         CardResults = new List<TurnType> { 0, 0, 0, 0, 0, 0, 0 };
         EraseCards();
-        SelectedCards = 0;
-        CardsLeft = 7;
+        _selectedCards = 0;
+        _cardsLeft = 7;
         TurnSelection = new List<Action>();
         WaitForMove = false;
     }
@@ -34,7 +34,7 @@ public class CardHolderLogic : MonoBehaviour
     /// </summary>
     void Update()
     {
-        if (CardsIsVisible && Input.GetMouseButtonDown(0) && SelectedCards < 3 && WaitForMove == false)
+        if (_cardsIsVisible && Input.GetMouseButtonDown(0) && _selectedCards < 3 && WaitForMove == false)
         {
             RaycastHit2D hit = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(Input.mousePosition), Vector2.zero);
             if (hit.collider != null)
@@ -50,21 +50,21 @@ public class CardHolderLogic : MonoBehaviour
                         {
                             //StartCoroutine(SelectMovementType(this, SelectedCards)); <-- gets intended movement then reports back (gives gameobject and the index of turns)
                             //WaitForMove is the number of moves it is waiting for, incase order gets weird
-                            moveSelect.GetMove(TurnSelection.Count-1, CardResults[i] == TurnType.WeakMove ? Constant.WeakMovePoints : CardResults[i] == TurnType.Move ? Constant.MovePoints : Constant.StrongMovePoints, Cards[i].transform.position.x, Cards[i].transform.position.y);
+                            MoveSelect.GetMove(TurnSelection.Count-1, CardResults[i] == TurnType.WeakMove ? Constant.WeakMovePoints : CardResults[i] == TurnType.Move ? Constant.MovePoints : Constant.StrongMovePoints, Cards[i].transform.position.x, Cards[i].transform.position.y);
                             WaitForMove = true;
                         }
                         //Set it so it wont draw next turn
                         CardResults[i] = TurnType.None;
-                        SelectedCards++;
-                        CardsLeft -= 1;
+                        _selectedCards++;
+                        _cardsLeft -= 1;
                     }
                 }
             }
         }
-        if ((SelectedCards == 3 || CardsLeft == 0) && WaitForMove == false)
+        if ((_selectedCards == 3 || _cardsLeft == 0) && WaitForMove == false)
         {
-            SelectedCards = 0;
-            player.Ready = true;
+            _selectedCards = 0;
+            Player.Ready = true;
             EraseCards();
         }
 
@@ -106,8 +106,8 @@ public class CardHolderLogic : MonoBehaviour
                 //ShieldOdd
             }
         }
-        SelectedCards = 0;
-        CardsLeft = 7;
+        _selectedCards = 0;
+        _cardsLeft = 7;
     }
 
     /// <summary>
@@ -132,7 +132,7 @@ public class CardHolderLogic : MonoBehaviour
                 Cards[i].SetActive(true);
             }
         }
-        CardsIsVisible = true;
+        _cardsIsVisible = true;
     }
 
     /// <summary>
@@ -149,7 +149,7 @@ public class CardHolderLogic : MonoBehaviour
             cardController.Reset();
         }
         //Set so we know the cards aren't on screen
-        CardsIsVisible = false;
+        _cardsIsVisible = false;
     }
 
     /// <summary>
