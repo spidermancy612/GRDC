@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Constants;
 
 public class CardHolderLogic : MonoBehaviour
 {
@@ -9,7 +10,6 @@ public class CardHolderLogic : MonoBehaviour
     public MoveSelect moveSelect;
     public List<GameObject> Cards; //List of visible cards
     public List<Material> CardMaterials; //Materials to be used on the cards
-    public float MoveOdd, WeakMoveOdd, StrongMoveOdd, AttackOdd, ShieldOdd; //Odds of a card being drawn
     public List<TurnType> CardResults; //List of Card results with range 0-4
     private bool CardsIsVisible; //Whether or not the cards are currenly visible
     private int SelectedCards, CardsLeft;
@@ -50,7 +50,7 @@ public class CardHolderLogic : MonoBehaviour
                         {
                             //StartCoroutine(SelectMovementType(this, SelectedCards)); <-- gets intended movement then reports back (gives gameobject and the index of turns)
                             //WaitForMove is the number of moves it is waiting for, incase order gets weird
-                            moveSelect.GetMove(TurnSelection.Count-1, 3, Cards[i].transform.position.x, Cards[i].transform.position.y);
+                            moveSelect.GetMove(TurnSelection.Count-1, CardResults[i] == TurnType.WeakMove ? Constant.WeakMovePoints : CardResults[i] == TurnType.Move ? Constant.MovePoints : Constant.StrongMovePoints, Cards[i].transform.position.x, Cards[i].transform.position.y);
                             WaitForMove = true;
                         }
                         //Set it so it wont draw next turn
@@ -79,23 +79,23 @@ public class CardHolderLogic : MonoBehaviour
         for (int i = 0; i < CardResults.Count; i++)
         {
             //Roll the card
-            double result = Random.value * (MoveOdd + WeakMoveOdd + StrongMoveOdd + AttackOdd + ShieldOdd);
-            if (result <= MoveOdd)
+            double result = Random.value * (Constant.MoveOdd + Constant.WeakMoveOdd + Constant.StrongMoveOdd + Constant.AttackOdd + Constant.ShieldOdd);
+            if (result <= Constant.MoveOdd)
             {
                 CardResults[i] = TurnType.Move;
                 //MoveOdd
             }
-            else if (result <= MoveOdd + WeakMoveOdd)
+            else if (result <= Constant.MoveOdd + Constant.WeakMoveOdd)
             {
                 CardResults[i] = TurnType.WeakMove;
                 //WeakMoveOdd
             }
-            else if (result <= MoveOdd + WeakMoveOdd + StrongMoveOdd)
+            else if (result <= Constant.MoveOdd + Constant.WeakMoveOdd + Constant.StrongMoveOdd)
             {
                 CardResults[i] = TurnType.StrongMove;
                 //Strong Move Odd
             }
-            else if (result <= MoveOdd + WeakMoveOdd + StrongMoveOdd + AttackOdd)
+            else if (result <= Constant.MoveOdd + Constant.WeakMoveOdd + Constant.StrongMoveOdd + Constant.AttackOdd)
             {
                 CardResults[i] = TurnType.Attack;
                 //AttackOdd
