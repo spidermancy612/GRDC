@@ -51,6 +51,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+     <Compile Include="Assets\agusia\cardChecker.cs" />
+     <Compile Include="Assets\agusia\deleteMeLater_card.cs" />
      <Compile Include="Assets\agusia\movementScript.cs" />
      <Compile Include="Assets\agusia\movePressButton.cs" />
      <Compile Include="Assets\Scripts\Constant.cs" />

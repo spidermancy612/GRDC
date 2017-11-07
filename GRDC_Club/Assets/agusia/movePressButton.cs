@@ -10,7 +10,7 @@ public class movePressButton : MonoBehaviour {
 	public GameObject[] inputField = new GameObject[6];
 
 	[Tooltip ("Input field for total movements")]
-	public GameObject totalMovesField = new GameObject();
+	public GameObject totalMovesField;
 
 	[Tooltip ("Total moves for the players turn")]
 	public int totalMoves = 7;

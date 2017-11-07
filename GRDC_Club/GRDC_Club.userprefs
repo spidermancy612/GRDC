@@ -1,8 +1,9 @@
 ﻿<Properties StartupItem="Assembly-CSharp.csproj">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/agusia/movePressButton.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/agusia/cardChecker.cs">
     <Files>
-      <File FileName="Assets/agusia/movePressButton.cs" Line="25" Column="48" />
+      <File FileName="Assets/agusia/movePressButton.cs" Line="26" Column="22" />
+      <File FileName="Assets/agusia/cardChecker.cs" Line="13" Column="29" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
