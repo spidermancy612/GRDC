@@ -1,0 +1,12 @@
+Script: projectileDamage
+Language: C#
+Created by Liam Baillie
+
+Script is responsible for applying damage to any object that has "health" scripts attached to it. When an object enters the trigger for this object will check if the tag matches the one provided by the designer and apply damage to the health script of the other object if they match. Script looks for the variable damageTaken on the other object and adds the designer specified damage amount to the health script. When damage is applied to the other object the object will destroy itself.
+
+Public Variables:
+damage - Amount of damage that is applied to the "health" of the other object
+theTag - Tag the script will look for on the other object. If the tags match, damage is applied
+
+Version History:
+1.0.0 - Initial version, code works.

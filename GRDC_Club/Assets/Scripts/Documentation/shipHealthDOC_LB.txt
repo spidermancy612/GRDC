@@ -1,0 +1,12 @@
+Script: shipHealth
+Language: C#
+Created by Liam Baillie
+
+Script is responsible for tracking the health of the object/unit it is attached to. The "health" of the object is set by the designer in the Inspector for the script. Damage is applied to the health via the public variable damageTaken that will update the currentHealth whenever the damageTaken goes above 0. Structure has been created for handling when the health hits 0, however current version only prints an output message as integrated systems for death are still under development.
+
+Public Variables:
+maxHealth - Developer set variable for the max healh of the unit
+damageTaken - Set from other scripts that want to apply damage to this object
+
+Version History:
+1.0.0 - Initial version, still requires code for what to do when health hits 0 
