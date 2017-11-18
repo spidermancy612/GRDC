@@ -306,8 +306,8 @@ MonoBehaviour:
     y: 760
     width: 405
     height: 547
-  m_MinSize: {x: 304, y: 271}
-  m_MaxSize: {x: 4004, y: 4021}
+  m_MinSize: {x: 300, y: 250}
+  m_MaxSize: {x: 4000, y: 4000}
   m_ActualView: {fileID: 25}
   m_Panes:
   - {fileID: 24}
@@ -532,7 +532,7 @@ MonoBehaviour:
   m_Rotation:
     m_Target: {x: -0.18930274, y: 0.71010214, z: -0.20828126, w: -0.64539784}
     speed: 2
-    m_Value: {x: -0.18930274, y: 0.71010214, z: -0.20828126, w: -0.64539784}
+    m_Value: {x: -0.18930274, y: 0.71010214, z: -0.20828125, w: -0.64539784}
   m_Size:
     m_Target: 10
     speed: 2
@@ -703,19 +703,19 @@ MonoBehaviour:
     m_ShowAllHits: 0
     m_SearchArea: 0
     m_Folders:
-    - Assets/Scripts/Documentation
+    - Assets/Scripts
   m_ViewMode: 1
   m_StartGridSize: 16
   m_LastFolders:
-  - Assets/Scripts/Documentation
+  - Assets/Scripts
   m_LastFoldersGridSize: 16
   m_LastProjectPath: C:\Users\Liam\Documents\Unity Projects\GRDC\GRDC_Club
   m_IsLocked: 0
   m_FolderTreeState:
     scrollPos: {x: 0, y: 0}
-    m_SelectedIDs: fa270000
-    m_LastClickedID: 10234
-    m_ExpandedIDs: 00000000582600006026000092260000aa260000ffffff7f
+    m_SelectedIDs: 98260000
+    m_LastClickedID: 9880
+    m_ExpandedIDs: 000000005c2600006626000098260000b8260000ffffff7f
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -743,7 +743,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 
     m_LastClickedID: 0
-    m_ExpandedIDs: 0000000058260000
+    m_ExpandedIDs: 000000005c2600006626000098260000b8260000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -774,18 +774,18 @@ MonoBehaviour:
     m_ExpandedInstanceIDs: 8e1d0000c438000010230000fa5700007ab4000004090000f24d0000e2110000e00f0000d21000009211000072080000c8200000ce0b0000240a0000380b0000b4260000c2210000e81000006e150000d2190000301c000074220000062b0000de260000be280000b228000012240000442800000a2700004c240000f8230000ee23000006240000f0230000fa230000442500003826000024240000fe260000282400003c570000d624000000000000d0060000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
-      m_Name: projectileDamage
-      m_OriginalName: projectileDamage
+      m_Name: 
+      m_OriginalName: 
       m_EditFieldRect:
         serializedVersion: 2
         x: 0
         y: 0
         width: 0
         height: 0
-      m_UserData: 10362
+      m_UserData: 0
       m_IsWaitingForDelay: 0
       m_IsRenaming: 0
-      m_OriginalEventType: 0
+      m_OriginalEventType: 11
       m_IsRenamingFilename: 1
       m_ClientGUIView: {fileID: 12}
     m_CreateAssetUtility:
@@ -904,9 +904,9 @@ MonoBehaviour:
     height: 1286
   m_TreeViewState:
     scrollPos: {x: 0, y: 0}
-    m_SelectedIDs: fa270000
-    m_LastClickedID: 0
-    m_ExpandedIDs: 12f9ffff18fcffff00000000
+    m_SelectedIDs: 16fcffff
+    m_LastClickedID: -1002
+    m_ExpandedIDs: 18fcffff00000000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 

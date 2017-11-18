@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class shipHealth : MonoBehaviour {
 
@@ -11,11 +12,14 @@ public class shipHealth : MonoBehaviour {
 
     private float currentHealth;                // Current health
 
+    public string sceneOnDeath;                 // The scene to load when the player dies
+
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //Method called at start of scene
 	void Start () {
         //Error logging
         if (maxHealth <= 0) { Debug.LogError("DEVELOPER ERROR - Bad Variable - Max health has not been set properly on " + gameObject.name); }
+        if (sceneOnDeath == "") { Debug.LogError("DEVELOPER ERROR - Bad Variable - Scene to load on player death has not been set for " + gameObject.name); }
 
         currentHealth = maxHealth;                                                                              // Set current health to developer specified max health
 	}
@@ -26,7 +30,7 @@ public class shipHealth : MonoBehaviour {
     {
         if (currentHealth <= 0)                                                                                 // Check if the objects health has fallen to 0
         {
-            Debug.Log(gameObject.name + " has died, but I don't know what to do with this information");            // The unit died, still need to integrate death systems
+            SceneManager.LoadScene(sceneOnDeath);                                                                   // Loads scene specified by developer
         }
     }
 
