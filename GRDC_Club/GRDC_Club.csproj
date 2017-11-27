@@ -90,6 +90,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\enemyV1.cs" />
     <Compile Include="Assets\Scripts\Button_Script.cs" />
     <Compile Include="Assets\Scripts\projectileDamage.cs" />
     <Compile Include="Assets\Scripts\shipHealth.cs" />
