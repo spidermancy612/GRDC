@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class cardManager : MonoBehaviour {
 
@@ -12,8 +13,6 @@ public class cardManager : MonoBehaviour {
 #region Instance Variables
     //Inspector Variables/////////////////////////////////////////////
     [Header("Card Controls")]                                       //
-    [SerializeField]                                                //
-    private int maxCards;                                           // Maximum number of cards that can be drawn in one hand
     [SerializeField]
     private int maxSelectedPerTrun;                                 // Maximum number of cards that can be selected in one turn
 
@@ -38,6 +37,24 @@ public class cardManager : MonoBehaviour {
     private float levelTwoThrust;                                   // Amount of thrust movement card 2 applied
     [SerializeField]
     private float levelThreeThrust;                                 // Amount of thrust movement card 3 applies
+
+    [Space(5)]
+    [Header("General Controls")]
+    [SerializeField]
+    private float gameActiveDuration;                               // Amount of time set by the developer for the game to be "active" for
+    [SerializeField]
+    private Color defaultCardColour;
+    [SerializeField]
+    private Color selectedCardColour;
+
+    [Space(5)]
+    [Header("Object References")]
+    [SerializeField]
+    private GameObject selectionWarning;                            // Object to warn players they have too many cards selected
+    [SerializeField]
+    private GameObject confirmationButton;                          // Button to confirm selected cards
+    [SerializeField]
+    private GameObject[] cardVisuals;                               // Array of the visuals for cards. Max number of cards is infered from this array length
     //Inspector Variables/////////////////////////////////////////////
 
     //General Variables///////////////////////////////////////////////
@@ -48,9 +65,15 @@ public class cardManager : MonoBehaviour {
     private float movementOneCap;                                   // Top value representing movement 1 card number for random selection
     private float movementTwoCap;                                   // Top value representing movement 2 card number for random selection
                                                                     // NOTE - Movement 3 is not included as code logic accounts for it as default case
+    private float gameplayTimer;                                    // Time for which the game is in an "active" state
 
     private GameObject cardsSelectionCanvas;                        // Canvas for allowing the player to select cards to play on this turn
     private GameObject applyThrustCanvas;                           // Canvas showing options for players to apply thrust to their ship
+
+    private bool gameActive;                                        // Helps code to determine when functions should run depending on if the player is active or drawing cards
+
+    private int[] cardsArray;                                       // Array holding cards - 0/CardUsed  1/Attack  2/Shield  3/MoveOne  4/MoveTwo  5/MoveThree
+    private List<int> selectedCardsList;                            // List holding all the cards currently selected by the player
     //General Variables///////////////////////////////////////////////
 
     #endregion
@@ -61,23 +84,104 @@ public class cardManager : MonoBehaviour {
     //Method called once at start of scene. Handles initial referencing and value setting
     void Start () {
         //Set up segments for weighted values during random number selection
+        //Set up the random card draw ranges
         maxWeightValue = attackCardRate + shieldCardRate + movementCardOneRate + movementCardTwoRate + movementCardThreeRate;
         attackCardCap = attackCardRate;
         shieldCardCap = attackCardRate + shieldCardRate;
         movementOneCap = shieldCardCap + movementCardOneRate;
         movementTwoCap = movementOneCap + movementOneCap;
 
+        //Start the gameplay timer at full
+        gameplayTimer = gameActiveDuration;
+
+        //Get object references for the canvas
+        cardsSelectionCanvas = GameObject.Find("Available Cards Canvas");
+        applyThrustCanvas = GameObject.Find("Apply Thrust Canvas");
+
+        //Initialize the cardsArray
+        cardsArray = new int[cardVisuals.Length];
+
+        //Start the game as choosing cards
+        gameActive = false;
+        createNewDeck();
+
+        //Make sure the right canvas is active
+        cardsSelectionCanvas.SetActive(true);
+        applyThrustCanvas.SetActive(false);
+
+        //Start all the buttons with the default colour
+        foreach (GameObject card in cardVisuals)
+        {
+            Button b = card.GetComponent<Button>();
+            ColorBlock cb = b.colors;
+            cb.normalColor = defaultCardColour;
+        }
+
+        //Log any errors that have occurred
         logVariableStatus();
     }
-	
-	// Update is called once per frame
-	void Update () {
-		
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //Method called every frame. Handles event checking
+    void Update () {
+        //When the game is active
+		if (gameActive)
+        {
+            //When the timer is above 0
+            if (gameplayTimer > 0)
+            {
+                //Decriment the timer in real time
+                gameplayTimer -= Time.deltaTime;
+            }
+            else
+            {
+                //End the active turn and start cards selection
+                startCardSelectionPeriod();
+            }
+        }
 	}
 
     #endregion
 
     #region Custom Private Methods
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //Called to end the active portion of the game. Pauses all events and allows players to select cards
+    private void startCardSelectionPeriod ()
+    {
+        //Pause and restart active variable
+        Time.timeScale = 0f;
+        gameActive = false;
+        gameplayTimer = gameActiveDuration;
+
+        //If we've run out of cards then create a new deck
+        if (checkForNoCards())
+        {
+            createNewDeck();
+        }
+
+        //Set up canvas'
+        applyThrustCanvas.SetActive(false);
+        cardsSelectionCanvas.SetActive(true);
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //Returns if the cardsArray has any cards in it
+    private bool checkForNoCards ()
+    {
+        //Iterate through the cardsArray
+        for (int i = 0; i < cardsArray.Length; i++)
+        {
+            //If there is a card in the deck
+            if (cardsArray[i] != 0)
+            {
+                //Return that the deck is not empty
+                return false;
+            }
+        }
+        //If we get to here then the deck is empty
+        return true;
+    }
+
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //Method called by start to check status of variables in the class. Method issues warning and errors if any variable has a bad value set to it. Primarily used to make
     //sure that inspector variables have no errors set in them
@@ -91,13 +195,18 @@ public class cardManager : MonoBehaviour {
         if (movementCardThreeRate < 0) { movementCardThreeRate = 0; }
 
         //Error Logging
-        if (maxCards < 1) { Debug.LogError("DEVELOPER ERROR - Bad Variable - maxCards has not been set to a valid number :: " + gameObject.name); }
-        if (maxSelectedPerTrun > maxCards) { Debug.LogError("DEVELOPER ERROR - Bad Variable - maxCards is less than the max selected per turn and will cause errors :: " + gameObject.name); }
+        if (cardVisuals.Length < 1) { Debug.LogError("DEVELOPER ERROR - Bad Array - No cards have been provided to the cardVisuals array. No cards will be drawn. :: " + gameObject.name); }
+        if (maxSelectedPerTrun > cardVisuals.Length) { Debug.LogError("DEVELOPER ERROR - Bad Variable - maxCards is less than the max selected per turn and will cause errors :: " + gameObject.name); }
         if (maxSelectedPerTrun < 1) { Debug.LogError("DEVELOPER ERROR - Bad Variable - maxSelectedCards has not been set to a valid number :: " + gameObject.name); }
         if (levelOneThrust <= 0) { Debug.LogError("DEVELOPER ERROR - Bad Variable - levelOneThrust has not been set to a valid number :: " + gameObject.name); }
         if (levelTwoThrust <= 0) { Debug.LogError("DEVELOPER ERROR - Bad Variable - levelTwoThrust has not been set to a valid number :: " + gameObject.name); }
         if (levelThreeThrust <= 0) { Debug.LogError("DEVELOPER ERROR - Bad Variable - levelThreeThrust has not been set to a valid number :: " + gameObject.name); }
         if (maxWeightValue <= 0) { Debug.LogError("DEVELOPER ERROR - Bad Variable - maxWeight value detected with illegal value. Current value will not create any cards for the game :: " + gameObject.name); }
+        if (cardsSelectionCanvas == null) { Debug.LogError("DEVELOPER ERROR - Null Variable - Unable to find the 'Available Cards Canvas' :: " + gameObject.name); }
+        if (applyThrustCanvas == null) { Debug.LogError("DEVELOPER ERROR - Null Variable - Unable to find the 'Apply Thrust Canvas' :: " + gameObject.name); }
+        if (gameActiveDuration <= 0) { Debug.LogError("DEVELOPER ERROR - Bad Variable - gameActiveDuration has not been set to a valid number and will prevent gameplay :: " + gameObject.name); }
+        if (selectionWarning == null) { Debug.LogError("DEVELOPER ERROR - Null Variable - selectionWarning canvas element has not been set :: " + gameObject.name); }
+        if (confirmationButton == null) { Debug.LogError("DEVELOPER ERROR - Null Variable - confirmationButton canvas element has not been set :: " + gameObject.name); }
 
         //Warning Logging
         if (attackCardRate == 0) { Debug.LogWarning("NOTICE - Spawn rate for attack cards has been set to 0 and will not spawn any cards of this type!"); }
@@ -106,9 +215,113 @@ public class cardManager : MonoBehaviour {
         if (movementCardTwoRate == 0) { Debug.LogWarning("NOTICE - Spawn rate for movement card two has been set to 0 and will not spawn any cards of this type!"); }
         if (movementCardThreeRate == 0) { Debug.LogWarning("NOTICE - Spawn rate for movement card three has been set to 0 and will not spawn any cards of this type!"); }
     }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //When called the method will overwrite the cards array with a new set of cards
+    private void createNewDeck ()
+    {
+        for (int i = 0; i < cardsArray.Length; i++)
+        {
+            cardsArray[i] = drawCard();
+        }
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //Chooses a random number betweeon 0 and the maxWeightValue. Depending on the section it is in, the method will return the number of which card was drawn
+    //This system is used to allow for adaptable weighted random rolling. Gives developer greater control from the inspector panel.
+    private int drawCard ()
+    {
+        //Choose random number between 0 and maxWeightValue
+        float rolled = Random.Range(0, maxWeightValue);
+
+        //Figure out which card the random number represents
+        if (rolled < attackCardCap)
+        {
+            return 1;
+        }
+        else if (rolled < shieldCardCap)
+        {
+            return 2;
+        }
+        else if (rolled < movementOneCap)
+        {
+            return 3;
+        }
+        else if (rolled < movementTwoCap)
+        {
+            return 4;
+        }
+        else
+        {
+            return 5;
+        }
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //Checks each element of the list and returns if there is a duplicate of the provided value
+    private bool cardExistsInList (int entry)
+    {
+        //Check all the cards in the list
+        foreach (int card in selectedCardsList)
+        {
+            //If the number already exists then we return that it is already there
+            if (card == entry)
+            {
+                return true;
+            }
+        }
+        //If we get to here then no duplicates were found
+        return false;
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //Changes the colour of a button based on the provided parameters
+    private void changeButtonColour (Button b, Color c)
+    {
+        ColorBlock cb = b.colors;
+        cb.normalColor = c;
+    }
     #endregion
 
     #region Custom Public Methods
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //Called by buttons in the scene for when the player tries to select a card
+    public void selectCard (int cardNumber)
+    {
+        //If the card has previously been selected
+        if (cardExistsInList(cardNumber))
+        {
+            //Remove it from the list and change the colour back to default
+            selectedCardsList.Remove(cardNumber);
+            changeButtonColour(cardVisuals[cardNumber].GetComponent<Button>(), defaultCardColour);
+        }
+        //Otherwise this is a new selection
+        else
+        {
+            //Add it to the list and update the button colour
+            selectedCardsList.Add(cardNumber);
+            changeButtonColour(cardVisuals[cardNumber].GetComponent<Button>(), selectedCardColour);
+        }
 
-#endregion
+        //Check to see if the player has selected too many cards
+        if (selectedCardsList.Count > maxSelectedPerTrun)
+        {
+            //Enable the warning canvas element
+            selectionWarning.SetActive(true);
+        }
+        //Otherwise they're fine
+        else
+        {
+            //Disable the warning canvas element
+            selectionWarning.SetActive(false);
+        }
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    public void confirmSelection ()
+    {
+
+    }
+    #endregion
 }
