@@ -91,6 +91,9 @@ public class cardManager : MonoBehaviour {
         movementOneCap = shieldCardCap + movementCardOneRate;
         movementTwoCap = movementOneCap + movementOneCap;
 
+        //Initialize the list
+        selectedCardsList = new List<int>();
+
         //Start the gameplay timer at full
         gameplayTimer = gameActiveDuration;
 
@@ -143,7 +146,7 @@ public class cardManager : MonoBehaviour {
 
     #endregion
 
-    #region Custom Private Methods
+#region Custom Private Methods
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //Called to end the active portion of the game. Pauses all events and allows players to select cards
     private void startCardSelectionPeriod ()
@@ -276,14 +279,13 @@ public class cardManager : MonoBehaviour {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //Changes the colour of a button based on the provided parameters
-    private void changeButtonColour (Button b, Color c)
+    private void changeButtonColour (Image i, Color c)
     {
-        ColorBlock cb = b.colors;
-        cb.normalColor = c;
+        i.color = c;
     }
     #endregion
 
-    #region Custom Public Methods
+#region Custom Public Methods
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //Called by buttons in the scene for when the player tries to select a card
     public void selectCard (int cardNumber)
@@ -293,14 +295,14 @@ public class cardManager : MonoBehaviour {
         {
             //Remove it from the list and change the colour back to default
             selectedCardsList.Remove(cardNumber);
-            changeButtonColour(cardVisuals[cardNumber].GetComponent<Button>(), defaultCardColour);
+            changeButtonColour(cardVisuals[cardNumber].GetComponent<Image>(), defaultCardColour);
         }
         //Otherwise this is a new selection
         else
         {
             //Add it to the list and update the button colour
             selectedCardsList.Add(cardNumber);
-            changeButtonColour(cardVisuals[cardNumber].GetComponent<Button>(), selectedCardColour);
+            changeButtonColour(cardVisuals[cardNumber].GetComponent<Image>(), selectedCardColour);
         }
 
         //Check to see if the player has selected too many cards
