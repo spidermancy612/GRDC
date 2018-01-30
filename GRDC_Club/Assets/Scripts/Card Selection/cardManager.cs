@@ -15,6 +15,10 @@ public class cardManager : MonoBehaviour {
     [Header("Card Controls")]                                       //
     [SerializeField]
     private int maxSelectedPerTrun;                                 // Maximum number of cards that can be selected in one turn
+    [SerializeField]
+    private bool mustApplyAllThrust;                                // Determines if the player must use all available thrust points
+    [SerializeField]
+    private float shieldTime;                                       // Time that a single shield will stay active for
 
     [Space(5)]
     [Header("Card Rates")]
@@ -32,25 +36,29 @@ public class cardManager : MonoBehaviour {
     [Space(5)]
     [Header("Movement Card Options")]
     [SerializeField]
-    private float levelOneThrust;                                   // Amount of thrust movement card 1 applies
+    private int levelOneThrust;                                     // Amount of thrust movement card 1 applies
     [SerializeField]
-    private float levelTwoThrust;                                   // Amount of thrust movement card 2 applied
+    private int levelTwoThrust;                                     // Amount of thrust movement card 2 applied
     [SerializeField]
-    private float levelThreeThrust;                                 // Amount of thrust movement card 3 applies
+    private int levelThreeThrust;                                   // Amount of thrust movement card 3 applies
+    [SerializeField]
+    private int thrustMultFactor;                                   // Factor value to be multiplied by thrust player applied
 
     [Space(5)]
     [Header("General Controls")]
     [SerializeField]
     private float gameActiveDuration;                               // Amount of time set by the developer for the game to be "active" for
     [SerializeField]
-    private Color defaultCardColour;
+    private Color defaultCardColour;                                // Default colour used on selection cards
     [SerializeField]
-    private Color selectedCardColour;
+    private Color selectedCardColour;                               // Colour used when a card is selected
 
     [Space(5)]
     [Header("Object References")]
     [SerializeField]
-    private GameObject selectionWarning;                            // Object to warn players they have too many cards selected
+    private GameObject player;                                      // Reference to player object
+    [SerializeField]
+    private GameObject tooManyCardsWarningGUI;                      // Object to warn players they have too many cards selected
     [SerializeField]
     private GameObject confirmationButton;                          // Button to confirm selected cards
     [SerializeField]
@@ -156,10 +164,18 @@ public class cardManager : MonoBehaviour {
         gameActive = false;
         gameplayTimer = gameActiveDuration;
 
+        player.GetComponent<playerController>().endActiveRound();
+
         //If we've run out of cards then create a new deck
         if (checkForNoCards())
         {
             createNewDeck();
+
+            //Turn all the cards back on for a new deck
+            foreach (GameObject card in cardVisuals)
+            {
+                card.SetActive(true);
+            }
         }
 
         //Set up canvas'
@@ -208,7 +224,7 @@ public class cardManager : MonoBehaviour {
         if (cardsSelectionCanvas == null) { Debug.LogError("DEVELOPER ERROR - Null Variable - Unable to find the 'Available Cards Canvas' :: " + gameObject.name); }
         if (applyThrustCanvas == null) { Debug.LogError("DEVELOPER ERROR - Null Variable - Unable to find the 'Apply Thrust Canvas' :: " + gameObject.name); }
         if (gameActiveDuration <= 0) { Debug.LogError("DEVELOPER ERROR - Bad Variable - gameActiveDuration has not been set to a valid number and will prevent gameplay :: " + gameObject.name); }
-        if (selectionWarning == null) { Debug.LogError("DEVELOPER ERROR - Null Variable - selectionWarning canvas element has not been set :: " + gameObject.name); }
+        if (tooManyCardsWarningGUI == null) { Debug.LogError("DEVELOPER ERROR - Null Variable - selectionWarning canvas element has not been set :: " + gameObject.name); }
         if (confirmationButton == null) { Debug.LogError("DEVELOPER ERROR - Null Variable - confirmationButton canvas element has not been set :: " + gameObject.name); }
 
         //Warning Logging
@@ -285,7 +301,7 @@ public class cardManager : MonoBehaviour {
     }
     #endregion
 
-#region Custom Public Methods
+    #region Custom Public Methods
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //Called by buttons in the scene for when the player tries to select a card
     public void selectCard (int cardNumber)
@@ -309,21 +325,45 @@ public class cardManager : MonoBehaviour {
         if (selectedCardsList.Count > maxSelectedPerTrun)
         {
             //Enable the warning canvas element
-            selectionWarning.SetActive(true);
+            tooManyCardsWarningGUI.SetActive(true);
         }
         //Otherwise they're fine
         else
         {
             //Disable the warning canvas element
-            selectionWarning.SetActive(false);
+            tooManyCardsWarningGUI.SetActive(false);
         }
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    //
+    //Called by Confirm Selection button in the scene to allow the player to start applying their selected cards for the next active period
     public void confirmSelection ()
     {
+        //Make sure they have less than the max number of cards selected
+        if (selectedCardsList.Count <= maxSelectedPerTrun)
+        {
+            //Turns off all selected cards once confirmed
+            foreach (int cardNum in selectedCardsList)
+            {
+                cardVisuals[cardNum].SetActive(false);
+            }
 
+            //Turn off the cards selection Canvas
+            cardsSelectionCanvas.SetActive(false);
+
+            //Send the card info to the playerController to apply chosen cards
+            player.GetComponent<playerController>().applyCards
+                (selectedCardsList, cardsArray, applyThrustCanvas, levelOneThrust, levelTwoThrust, levelThreeThrust, thrustMultFactor, mustApplyAllThrust, shieldTime);
+
+            //Remove the selected cards from the array
+            foreach (int card in selectedCardsList)
+            {
+                cardsArray[card] = 0;
+            }
+
+            //Empty the cards list
+            selectedCardsList = new List<int>();
+        }
     }
     #endregion
 }
