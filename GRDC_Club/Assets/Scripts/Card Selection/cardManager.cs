@@ -45,6 +45,13 @@ public class cardManager : MonoBehaviour {
     private int thrustMultFactor;                                   // Factor value to be multiplied by thrust player applied
 
     [Space(5)]
+    [Header("Bullet Options")]
+    [SerializeField]
+    private GameObject bullet;
+    [SerializeField]
+    private float bulletSpeed;
+
+    [Space(5)]
     [Header("General Controls")]
     [SerializeField]
     private float gameActiveDuration;                               // Amount of time set by the developer for the game to be "active" for
@@ -352,6 +359,7 @@ public class cardManager : MonoBehaviour {
             cardsSelectionCanvas.SetActive(false);
 
             //Send the card info to the playerController to apply chosen cards
+            player.GetComponent<playerController>().getBulletInfo(bullet, bulletSpeed);
             player.GetComponent<playerController>().applyCards
                 (selectedCardsList, cardsArray, applyThrustCanvas, levelOneThrust, levelTwoThrust, levelThreeThrust, thrustMultFactor, mustApplyAllThrust, shieldTime);
 
