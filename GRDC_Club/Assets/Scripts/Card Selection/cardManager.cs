@@ -65,6 +65,10 @@ public class cardManager : MonoBehaviour {
     [SerializeField]
     private GameObject player;                                      // Reference to player object
     [SerializeField]
+    private GameObject cardsSelectionCanvas;
+    [SerializeField]
+    private GameObject applyThrustCanvas;
+    [SerializeField]
     private GameObject tooManyCardsWarningGUI;                      // Object to warn players they have too many cards selected
     [SerializeField]
     private GameObject confirmationButton;                          // Button to confirm selected cards
@@ -81,9 +85,6 @@ public class cardManager : MonoBehaviour {
     private float movementTwoCap;                                   // Top value representing movement 2 card number for random selection
                                                                     // NOTE - Movement 3 is not included as code logic accounts for it as default case
     private float gameplayTimer;                                    // Time for which the game is in an "active" state
-
-    private GameObject cardsSelectionCanvas;                        // Canvas for allowing the player to select cards to play on this turn
-    private GameObject applyThrustCanvas;                           // Canvas showing options for players to apply thrust to their ship
 
     private bool gameActive;                                        // Helps code to determine when functions should run depending on if the player is active or drawing cards
 
@@ -111,10 +112,6 @@ public class cardManager : MonoBehaviour {
 
         //Start the gameplay timer at full
         gameplayTimer = gameActiveDuration;
-
-        //Get object references for the canvas
-        cardsSelectionCanvas = GameObject.Find("Available Cards Canvas");
-        applyThrustCanvas = GameObject.Find("Apply Thrust Canvas");
 
         //Initialize the cardsArray
         cardsArray = new int[cardVisuals.Length];
@@ -343,6 +340,13 @@ public class cardManager : MonoBehaviour {
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //Returns the object reference for the applyThrustCanvas
+    public GameObject getThrustCanvas ()
+    {
+        return applyThrustCanvas;
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //Called by Confirm Selection button in the scene to allow the player to start applying their selected cards for the next active period
     public void confirmSelection ()
     {
@@ -357,6 +361,7 @@ public class cardManager : MonoBehaviour {
 
             //Turn off the cards selection Canvas
             cardsSelectionCanvas.SetActive(false);
+            applyThrustCanvas.SetActive(true);
 
             //Send the card info to the playerController to apply chosen cards
             player.GetComponent<playerController>().getBulletInfo(bullet, bulletSpeed);

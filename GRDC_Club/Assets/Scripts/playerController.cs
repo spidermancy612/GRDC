@@ -9,23 +9,26 @@ public class playerController : MonoBehaviour {
 
     /*
      * TODO
-     * - Public methods for updating thrust to apply
-     * - Canvas for the thrust to be applied
-     *      Thinking of having each button press update thrust vars and then a quick check when the press confirm
-     *      Don't forget to check the allThrustNeeded boolean
+     * - Need to get canvas switching to work better
+     * - I don't think the game timer is working currently, check into it
+     * - Print out the card type to the card buttons so I know what I'm selecting
      * - Make sure to plug in health code
      * - I was thinking of raycasting to show the player the ship direction
      */
 
     #region Instance Variables
 
+    [SerializeField]
+    private GameObject shield;
+    [SerializeField]
+    private GameObject shootPoint;
+
     //General Variables///////////////////////////////////////
     private int[] cardsArray;
 
-    private GameObject shootPoint;                          // Location to spawn player projectile when firing
-    private GameObject shield;                              // Player shield object
     private GameObject applyForceCanvas;                    // Canvas used to allow the player to apply force to their ship this turn
     private GameObject bullet;
+    private GameObject gameManager;
 
     private Rigidbody playerRigidBody;                      // Rigidbody component on the player
 
@@ -62,17 +65,20 @@ public class playerController : MonoBehaviour {
     //Method called once at start of scene. Responsible for setting up needed references
     private void Start()
     {
-        //Get the shield and shoot point on this player
-        assignPlayerVariables();
+        gameManager = GameObject.Find("GAMEMANAGER");
+
+        applyForceCanvas = gameManager.GetComponent<cardManager>().getThrustCanvas();
 
         //Get the rigidBody reference
         playerRigidBody = GetComponent<Rigidbody>();
 
+
+
         totalThrustPointsText = applyForceCanvas.transform.GetChild(0).GetChild(0).GetComponent<Text>();
-        forwardThrustText= applyForceCanvas.transform.GetChild(1).GetChild(0).GetComponent<Text>();
+        forwardThrustText = applyForceCanvas.transform.GetChild(1).GetChild(0).GetComponent<Text>();
         backwardThrustText = applyForceCanvas.transform.GetChild(2).GetChild(0).GetComponent<Text>();
-        rightRotationText = applyForceCanvas.transform.GetChild(3).GetChild(0).GetComponent<Text>();
-        leftRotationText = applyForceCanvas.transform.GetChild(4).GetChild(0).GetComponent<Text>();
+        rightThrustText = applyForceCanvas.transform.GetChild(3).GetChild(0).GetComponent<Text>();
+        leftThrustText = applyForceCanvas.transform.GetChild(4).GetChild(0).GetComponent<Text>();
         rightRotationText = applyForceCanvas.transform.GetChild(5).GetChild(0).GetComponent<Text>();
         leftRotationText = applyForceCanvas.transform.GetChild(6).GetChild(0).GetComponent<Text>();
     }
@@ -115,30 +121,6 @@ public class playerController : MonoBehaviour {
 
     #region Private Methods
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    //Find the shootPoint and Shield Gameobjects on the player
-    private void assignPlayerVariables ()
-    {
-        //Find the shoot point from the children
-        for (int i = 0; i < transform.childCount; i++)
-        {
-            if (transform.GetChild(i).name.Contains("Shoot"))
-            {
-                shootPoint = transform.GetChild(i).gameObject;
-                break;
-            }
-        }
-
-        //Get the shield from the children 
-        for (int i = 0; i < transform.childCount; i++)
-        {
-            if (transform.GetChild(i).name.Contains("Shield"))
-            {
-                shield = transform.GetChild(0).gameObject;
-            }
-        }
-    }
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //Method called by the update method when a bullet needs to be fired
     private void shoot ()
     {
@@ -157,8 +139,8 @@ public class playerController : MonoBehaviour {
         playerRigidBody.AddForce(Vector3.left * leftThrust);
         playerRigidBody.AddForce(Vector3.right * rightThrust);
 
-        playerRigidBody.AddTorque(Vector3.left * leftRotation);
-        playerRigidBody.AddTorque(Vector3.right * rightRotation);
+        playerRigidBody.AddTorque(new Vector3(0, -1, 0) * leftRotation);
+        playerRigidBody.AddTorque(new Vector3(0, 1, 0) * rightRotation);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -172,6 +154,9 @@ public class playerController : MonoBehaviour {
     //Called to update the applyThrust canvas GUI whenever a button is pressed
     private void updateApplyThrustGUI ()
     {
+        Debug.Log(leftThrustText.gameObject.name);
+        Debug.Log(leftThrustText.name);
+
         totalThrustPointsText.text = totalThrustPoints.ToString();
         forwardThrustText.text = forwardThrust.ToString();
         backwardThrustText.text = backwardThrust.ToString();
@@ -263,6 +248,7 @@ public class playerController : MonoBehaviour {
                     }
             }
         }
+        updateApplyThrustGUI();
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -294,7 +280,7 @@ public class playerController : MonoBehaviour {
     //Called by buttons on the applyThrust canvas to update the forward thrust
     public void modifyForwardThrust (int updateValue)
     {
-        totalThrustPoints += updateValue;
+        totalThrustPoints -= updateValue;
         forwardThrust += updateValue;
         updateApplyThrustGUI();
     }
@@ -303,7 +289,7 @@ public class playerController : MonoBehaviour {
     //Called by buttons on the applyThrust canvas to update the backward thrust
     public void modifyBackwardThrust (int updateValue)
     {
-        totalThrustPoints += updateValue;
+        totalThrustPoints -= updateValue;
         backwardThrust += updateValue;
         updateApplyThrustGUI();
     }
@@ -312,7 +298,7 @@ public class playerController : MonoBehaviour {
     //Called by buttons on the applyThrust canvas to update the leftThrust
     public void modifyLeftThrust (int updateValue)
     {
-        totalThrustPoints += updateValue;
+        totalThrustPoints -= updateValue;
         leftThrust += updateValue;
         updateApplyThrustGUI();
     }
@@ -321,7 +307,7 @@ public class playerController : MonoBehaviour {
     //Called by buttons on the applyThrust canvas to update the rightThrust
     public void modifyRightThrust (int updateValue)
     {
-        totalThrustPoints += updateValue;
+        totalThrustPoints -= updateValue;
         rightThrust += updateValue;
         updateApplyThrustGUI();
     }
@@ -330,7 +316,7 @@ public class playerController : MonoBehaviour {
     //Called by buttons on the applyThrust canvas to update the leftRotation
     public void modifyLeftRotation (int updateValue)
     {
-        totalThrustPoints += updateValue;
+        totalThrustPoints -= updateValue;
         leftRotation += updateValue;
         updateApplyThrustGUI();
     }
@@ -339,7 +325,7 @@ public class playerController : MonoBehaviour {
     //Called by buttons on the applyThrust canvas to update the rightRotation
     public void modifyRightRotation (int updateValue)
     {
-        totalThrustPoints += updateValue;
+        totalThrustPoints -= updateValue;
         rightRotation += updateValue;
         updateApplyThrustGUI();
     }
