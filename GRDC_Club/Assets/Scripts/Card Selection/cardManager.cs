@@ -139,7 +139,11 @@ public class cardManager : MonoBehaviour {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //Method called every frame. Handles event checking
     void Update () {
-        //When the game is active
+        
+        
+        
+        
+        /*//When the game is active
 		if (gameActive)
         {
             //When the timer is above 0
@@ -153,40 +157,12 @@ public class cardManager : MonoBehaviour {
                 //End the active turn and start cards selection
                 startCardSelectionPeriod();
             }
-        }
+        }*/
 	}
 
     #endregion
 
 #region Custom Private Methods
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    //Called to end the active portion of the game. Pauses all events and allows players to select cards
-    private void startCardSelectionPeriod ()
-    {
-        //Pause and restart active variable
-        Time.timeScale = 0f;
-        gameActive = false;
-        gameplayTimer = gameActiveDuration;
-
-        player.GetComponent<playerController>().endActiveRound();
-
-        //If we've run out of cards then create a new deck
-        if (checkForNoCards())
-        {
-            createNewDeck();
-
-            //Turn all the cards back on for a new deck
-            foreach (GameObject card in cardVisuals)
-            {
-                card.SetActive(true);
-            }
-        }
-
-        //Set up canvas'
-        applyThrustCanvas.SetActive(false);
-        cardsSelectionCanvas.SetActive(true);
-    }
-
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //Returns if the cardsArray has any cards in it
     private bool checkForNoCards ()
@@ -247,6 +223,7 @@ public class cardManager : MonoBehaviour {
         {
             cardsArray[i] = drawCard();
         }
+        nameCards();
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -303,9 +280,85 @@ public class cardManager : MonoBehaviour {
     {
         i.color = c;
     }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //Names all the cards based on the card type drawn
+    private void nameCards ()
+    {
+        Debug.Log("Naming Card:");
+        for (int i = 0; i < cardsArray.Length; i++)
+        {
+            string name;
+
+            switch (cardsArray[i])
+            {
+                case 1:
+                    {
+                        name = "Attack";
+                        break;
+                    }
+                case 2:
+                    {
+                        name = "Shield";
+                        break;
+                    }
+                case 3:
+                    {
+                        name = "Move 1";
+                        break;
+                    }
+                case 4:
+                    {
+                        name = "Move 2";
+                        break;
+                    }
+                case 5:
+                    {
+                        name = "Move 3";
+                        break;
+                    }
+                default:
+                    {
+                        name = "Something Broken";
+                        break;
+                    }
+            }
+            Debug.Log(name);
+            cardVisuals[i].transform.GetChild(0).GetComponent<Text>().text = name;
+        }
+    }
     #endregion
 
     #region Custom Public Methods
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //Called to end the active portion of the game. Pauses all events and allows players to select cards
+    public void startCardSelectionPeriod()
+    {
+        //Pause and restart active variable
+        Time.timeScale = 0f;
+        gameActive = false;
+        gameplayTimer = gameActiveDuration;
+
+        player.GetComponent<playerController>().endActiveRound();
+
+        //If we've run out of cards then create a new deck
+        if (checkForNoCards())
+        {
+            createNewDeck();
+
+            //Turn all the cards back on for a new deck
+            foreach (GameObject card in cardVisuals)
+            {
+                card.SetActive(true);
+                changeButtonColour(card.GetComponent<Image>(), defaultCardColour);
+            }
+        }
+
+        //Set up canvas'
+        applyThrustCanvas.SetActive(false);
+        cardsSelectionCanvas.SetActive(true);
+    }
+
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //Called by buttons in the scene for when the player tries to select a card
     public void selectCard (int cardNumber)
@@ -344,6 +397,13 @@ public class cardManager : MonoBehaviour {
     public GameObject getThrustCanvas ()
     {
         return applyThrustCanvas;
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    public float getActiveTimer ()
+    {
+        return gameActiveDuration;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

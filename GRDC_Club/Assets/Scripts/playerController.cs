@@ -32,6 +32,8 @@ public class playerController : MonoBehaviour {
 
     private Rigidbody playerRigidBody;                      // Rigidbody component on the player
 
+    private bool isActive;
+
     private int totalThrustPoints;                          // Sum of all thrust available
     private int thrustFactor;                               // Factor to multiply thrust by
     private int timesToShoot;                               // How many times the player will shoot
@@ -39,6 +41,8 @@ public class playerController : MonoBehaviour {
     private float shieldTime;                               // How long the shield will be active for
     private float bulletSpeed;
     private float shootTimer;
+
+    private float activeTimer;
 
     private float leftThrust;
     private float rightThrust;
@@ -87,21 +91,16 @@ public class playerController : MonoBehaviour {
     //Method called every frame to do state checking
     private void Update()
     {
-        //Check if timer is active
-        if (shootTimer > 0)
+        if (isActive)
         {
-            shootTimer -= Time.deltaTime;
-        }
-        //Otherwise we can shoot
-        else
-        {
-            //Check if we have ammo left and the round is active
-            if (timesToShoot > 0 && roundActive)
+            if (activeTimer > 0)
             {
-                //Fire the gun and reset for next shot
-                shoot();
-                timesToShoot--;
-                shootTimer = 1;
+                activeTimer -= Time.deltaTime;
+            }
+            else
+            {
+                isActive = false;
+                gameManager.GetComponent<cardManager>().startCardSelectionPeriod();
             }
         }
 
@@ -134,13 +133,13 @@ public class playerController : MonoBehaviour {
     {
         totalThrustPoints = 0;
 
-        playerRigidBody.AddForce(Vector3.forward * forwardThrust);
-        playerRigidBody.AddForce(Vector3.forward * backwardThrust);
-        playerRigidBody.AddForce(Vector3.left * leftThrust);
-        playerRigidBody.AddForce(Vector3.right * rightThrust);
+        playerRigidBody.AddRelativeForce(Vector3.forward * forwardThrust);
+        playerRigidBody.AddRelativeForce(Vector3.forward * backwardThrust);
+        playerRigidBody.AddRelativeForce(Vector3.left * leftThrust);
+        playerRigidBody.AddRelativeForce(Vector3.right * rightThrust);
 
-        playerRigidBody.AddTorque(new Vector3(0, -1, 0) * leftRotation);
-        playerRigidBody.AddTorque(new Vector3(0, 1, 0) * rightRotation);
+        playerRigidBody.AddRelativeTorque(new Vector3(0, -1, 0) * leftRotation);
+        playerRigidBody.AddRelativeTorque(new Vector3(0, 1, 0) * rightRotation);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -267,12 +266,20 @@ public class playerController : MonoBehaviour {
             {
                 applyThrust();
                 enableShield();
+                isActive = true;
+                activeTimer = gameManager.GetComponent<cardManager>().getActiveTimer();
+                applyForceCanvas.SetActive(false);
+                Time.timeScale = 1f;
             }
         }
         else
         {
             applyThrust();
             enableShield();
+            isActive = true;
+            activeTimer = gameManager.GetComponent<cardManager>().getActiveTimer();
+            applyForceCanvas.SetActive(false);
+            Time.timeScale = 1f;
         }
     }
 
