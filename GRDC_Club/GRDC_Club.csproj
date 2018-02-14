@@ -313,6 +313,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\enemyV1.cs" />
+    <Compile Include="Assets\Scripts\Managers\canvasSubManager.cs" />
     <Compile Include="Assets\Scripts\Managers\cardDrawSubManager.cs" />
     <Compile Include="Assets\Scripts\Managers\persistentData.cs" />
     <Compile Include="Assets\Scripts\Managers\referenceManager.cs" />

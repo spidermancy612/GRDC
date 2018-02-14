@@ -11,55 +11,52 @@ public class cardDrawSubManager : MonoBehaviour {
      * Deals with when all cards are used and draws decks when needed
      */
 
-    //Inspector Variables////////////////////////////////////////////
+    //Inspector Variables/////////////////////////////////////////////
     [Header("Player Deck Options")]
+    [SerializeField] 
+    private bool createNewDeckOnStart;                              // Should the script create a new deck for each player at the start of the game?
     [SerializeField]
-    private bool createNewDeckOnStart;
-    [SerializeField]
-    private int deckSize;
+    private int deckSize;                                           // Number of cards to be drawn for a single deck
 
     [Space(5)]
     [Header("Card Drop Rates")]
     [SerializeField]
-    private int attackRate;
+    private int attackRate;                                         // Rate at which the player will get an attack card
     [SerializeField]
-    private int shieldRate;
+    private int shieldRate;                                         // Rate at which the player will get a shield card
     [SerializeField]
-    private int moveOneRate;
+    private int moveOneRate;                                        // Rate at which the player will get a movement 1 card
     [SerializeField]
-    private int moveTwoRate;
+    private int moveTwoRate;                                        // Rate at which the player will get a movement 2 card
     [SerializeField]
-    private int moveThreeRate;
+    private int moveThreeRate;                                      // Rate at which the player will get a movement 3 card
 
     [Space(5)]
     [Header("Card Names")]
     [SerializeField]
-    private string attackName;
+    private string attackName;                                      // String indicating the attack card
     [SerializeField]
-    private string shieldName;
+    private string shieldName;                                      // String indicating the shield card
     [SerializeField]
-    private string moveOneName;
+    private string moveOneName;                                     // String indicating movement 1 card
     [SerializeField]
-    private string moveTwoName;
+    private string moveTwoName;                                     // String indicating movement 2 card
     [SerializeField]
-    private string moveThreeName;
-    //Inspector Variables////////////////////////////////////////////
+    private string moveThreeName;                                   // String indicating movement 3 card
+    //Inspector Variables/////////////////////////////////////////////
 
 
-    //General Variables//////////////////////////////////////////////
-    private int playerCount;
-    private int cardRateSum;
+    //General Variables///////////////////////////////////////////////
+    private int playerCount;                                        // Number of players in the scene
+    private int cardRateSum;                                        // Sum of all drop rates used for calculating weighted card draws
 
-    private Dictionary<int, string[]> playerDictionary;
+    private Dictionary<int, string[]> playerDictionary;             // Dictionary of all player decks
 
-    private string[] cardTypes;
+    private string[] cardTypes;                                     // Array of card strings for uniform naming across classes
 
-    private GameObject persistentDataObject;
-    private GameObject referenceManager;
-
-    private persistentData persistentDataManager;
-    private referenceManager sceneReferenceManager;
-    //General Variables//////////////////////////////////////////////
+    private persistentData persistentDataManager;                   // Class reference for the persistent data manager
+    private referenceManager sceneReferenceManager;                 // CLass reference for the reference manager
+    //General Variables///////////////////////////////////////////////
 
 #region Unity Default Methods
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -69,8 +66,16 @@ public class cardDrawSubManager : MonoBehaviour {
         persistentDataManager = GameObject.Find("PERSISTENTDATA").GetComponent<persistentData>();
         sceneReferenceManager = GameObject.Find("GAMEMANAGER").GetComponent<referenceManager>();
 
-        //Get how many players we have
-        playerCount = persistentDataManager.getPlayerCount();
+        //If we started the game straight to this scene then we're in dev mode and only have 1 player
+        if (persistentDataManager == null)
+        {
+            playerCount = 1;
+        }
+        //Otherwise continue as normal and get the player count
+        else
+        {
+            playerCount = persistentDataManager.getPlayerCount();
+        }
 
         //Get the sum of all card drop rates 
         cardRateSum = attackRate + shieldRate + moveOneRate + moveTwoRate + moveThreeRate;
