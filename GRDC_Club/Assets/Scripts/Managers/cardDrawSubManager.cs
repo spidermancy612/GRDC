@@ -5,6 +5,9 @@ using UnityEngine;
 public class cardDrawSubManager : MonoBehaviour {
 
     /*
+     * Created by Liam Baillie
+     * Feb 11, 2018
+     * 
      * Script acts as a SubManager for the CardsManager.
      * Handles storing and drawing cards for all players.
      * 
